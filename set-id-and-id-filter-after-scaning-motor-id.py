@@ -68,7 +68,7 @@ def shutdown_motor():
     if reply is not None and reply.arbitration_id == current_id+REPLY_COMMAND:
         data = reply.data
         if data[0] == MOTOR_SHUTDOWN_CMD:
-            print("Motor shutdown successfully")
+            print("Motor shutdown successfully (New Setting Applied)")
         else:
             print("Failed to shutdown motor")
     else:
@@ -100,6 +100,10 @@ if __name__ == "__main__":
                 break
             elif user_input.lower() == 'y':
                 set_canid_filter(0x00)
+                time.sleep(1)                                 
+                print("Shutdown motor and wait for 2 seconds")                            
+                shutdown_motor()
+                time.sleep(2)                 
                 break
             else:
                 print("Invalid input. Please enter 'y' or 'n'.")
@@ -130,6 +134,7 @@ if __name__ == "__main__":
                             print(f"Motor ID {new_id} set successfully")
                             current_id = new_id
                             # Shutdown motor and wait for 2 seconds
+                            time.sleep(1)                                                        
                             print("Shutdown motor and wait for 2 seconds")                            
                             shutdown_motor()
                             time.sleep(2)                            
@@ -146,19 +151,23 @@ if __name__ == "__main__":
 
         # Ask user to enable or disable CANID filter after ID change
         while True:
-            print("")  
-            print("Please determine if you eanble or diable CANID filter setting:")                                              
+            print("!!")  
+            print("PLEASE SHUTDOWN AND RESTART MOTOR FROM POWER SUPPLY **MANUALLY**.")
+            print("!!")  
+            print("And determine if you eanble or diable CANID filter setting:")                                              
             print("Enabling CANID filter will improve the efficiency of motor sending and receiving in CAN communication.")
             print("Disabling CANID filter is necessary when using the multi-motor control command 0x280.")
             user_input = input("Do you want to enable CANID filter? (y/n): ")
             if user_input.lower() == 'y':
                 set_canid_filter(0x01)
+                time.sleep(1)                                    
                 print("Shutdown motor and wait for 2 seconds")
                 shutdown_motor() 
                 time.sleep(2)                    
                 break
             elif user_input.lower() == 'n':
                 set_canid_filter(0x00)
+                time.sleep(1)                    
                 print("Shutdown motor and wait for 2 seconds")                
                 shutdown_motor()                
                 time.sleep(2)                    
